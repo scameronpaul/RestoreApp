@@ -30,3 +30,8 @@
 *.exe
 *.out
 *.app
+.vs/RestoreApp/v17/Browse.VC.db
+.vs/RestoreApp/v17/ipch/AutoPCH/387bc90c68cf169/SCRIPT.ipch
+.vs/RestoreApp/v17/ipch/AutoPCH/38ecc9784651447/POWERSHELL.ipch
+.vs/RestoreApp/v17/ipch/AutoPCH/8f11cc5d613259f6/POWERSHELL.ipch
+.vs/RestoreApp/v17/ipch/AutoPCH/a68d3d168dcc5b67/MAIN.ipch

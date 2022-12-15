@@ -1,0 +1,3 @@
+﻿  gui.cpp
+E:\Coding\C++\Applications\RestoreApp\app\gui.cpp(78,23): warning C4244: 'return': conversion from 'LRESULT' to 'long', possible loss of data
+  RestoreApp.vcxproj -> E:\Coding\C++\Applications\RestoreApp\x64\Debug\RestoreApp.exe

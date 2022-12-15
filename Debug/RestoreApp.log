@@ -1,0 +1,5 @@
+﻿  Main.cpp
+E:\Coding\C++\Applications\RestoreApp\app\Main.cpp(166,19): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+E:\Coding\C++\Applications\RestoreApp\app\Main.cpp(170,21): warning C4018: '<': signed/unsigned mismatch
+E:\Coding\C++\Applications\RestoreApp\app\Main.cpp(176,10): warning C4018: '<': signed/unsigned mismatch
+  RestoreApp.vcxproj -> E:\Coding\C++\Applications\RestoreApp\Debug\RestoreApp.exe

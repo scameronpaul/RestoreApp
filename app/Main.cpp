@@ -107,29 +107,25 @@ int __stdcall wWinMain(
 
 	std::string message = "";
 
-
 	// Main loop
 	while (gui::exit)
 	{
 		// Initialize IMGUI frame
 		gui::BeginRender();
 		ImGui::SetNextWindowPos({ 0, 0 });
-		ImGui::SetNextWindowSize({ (float)gui::width, (float)gui::height });
+		ImGui::SetNextWindowSize(ImVec2(gui::width, gui::height));
 		ImGui::Begin(
 			"RestoreApp",
 			&gui::exit,
+			ImGuiWindowFlags_NoResize |
 			ImGuiWindowFlags_NoSavedSettings |
 			ImGuiWindowFlags_NoCollapse |
 			ImGuiWindowFlags_NoMove |
-			ImGuiWindowFlags_NoTitleBar |
-			ImGuiWindowFlags_NoResize
+			ImGuiWindowFlags_NoTitleBar 
 		);
 
-		//if (ImGui::GetWindowWidth() != gui::width || ImGui::GetWindowHeight() != gui::height)
-		//{
-		//	gui::width = (int)ImGui::GetWindowWidth();
-		//	gui::height = (int)ImGui::GetWindowHeight();
-		//}
+		//gui::width = ImGui::GetWindowWidth();
+		//gui::height = ImGui::GetWindowHeight();
 		
 		// Colors
 		ImVec4* colors = ImGui::GetStyle().Colors;
@@ -181,6 +177,7 @@ int __stdcall wWinMain(
 		switch (currentTab)
 		{
 		case 0: {
+			gui::resize = true;
 			if (ImGui::Button("Debloat All", ImVec2(ImGui::GetContentRegionAvail().x, 40)))
 			{
 				CheckForWinget();
@@ -195,7 +192,9 @@ int __stdcall wWinMain(
 				{ "Browsers", softwareBrowsers },
 				{ "Development", softwareDevelopment },
 				{ "Document", softwareDocument },
-				{ "ProTools", softwareProTools },
+				{ "ProTools1", softwareProTools },
+				{ "ProTools2", softwareProTools },
+				{ "ProTools3", softwareProTools },
 			};
 			
 			// Scaling behaviour
@@ -206,7 +205,12 @@ int __stdcall wWinMain(
 			float sizeY = 230;
 			float gridXWidth = gui::width - (posX * 2);
 			int columns = software.size();
-			if (columns > 4) columns = 4;
+			while (gridXWidth / columns > 260) 
+				columns++;
+			while (gridXWidth / columns < 200)
+				columns--;
+			if (gridXWidth / columns < 175)
+				if (columns > 4) columns = 4;
 			float boxWidth = (gridXWidth - (xPadding * columns) + columns) / columns;
 			
 			// Create category boxes
@@ -227,7 +231,7 @@ int __stdcall wWinMain(
 				} ImGui::EndChild();
 				ImGui::SameLine(0, 0);
 				i++;
-				if (i >= 4) {
+				if (i >= columns) {
 					i = 0;
 					posY += sizeY + yPadding;
 				}
@@ -255,7 +259,7 @@ int __stdcall wWinMain(
 		ImGui::End();
 		gui::EndRender();
 		// Throttle the loop
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		//std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
 
 	// Cleanup

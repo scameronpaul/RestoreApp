@@ -4,10 +4,11 @@
 namespace gui
 {
 	// window size
-	inline int width = 800;
-	inline int height = 600;
+	inline int width = 1000;
+	inline int height = 570;
 	
 	inline bool exit = true;
+	inline bool resize = false;
 	
 	// winapi window vars
 	inline HWND window = nullptr;

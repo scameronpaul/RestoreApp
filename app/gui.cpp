@@ -19,16 +19,6 @@ long __stdcall WindowProcess(
 {
 	if (ImGui_ImplWin32_WndProcHandler(window, message, wideParam, longParam))
 		return true;
-	
-	//SetWindowPos(
-	//	gui::window,
-	//	HWND_TOPMOST,
-	//	0,
-	//	0,
-	//	gui::width,
-	//	gui::height,
-	//	SWP_SHOWWINDOW | SWP_NOZORDER | SWP_NOMOVE
-	//);
 
 	switch (message)
 	{
@@ -59,6 +49,16 @@ long __stdcall WindowProcess(
 		{
 			const auto points = MAKEPOINTS(longParam);
 			auto rect = ::RECT{ };
+
+			//SetWindowPos(
+			//	gui::window,
+			//	HWND_TOPMOST,
+			//	0,
+			//	0,
+			//	gui::width,
+			//	gui::height,
+			//	SWP_SHOWWINDOW | SWP_NOZORDER | SWP_NOMOVE
+			//);
 
 			GetWindowRect(gui::window, &rect);
 			
@@ -112,8 +112,8 @@ void gui::CreateHWindow(
 		WS_POPUP,
 		100,
 		100,
-		width,
-		height,
+		gui::width,
+		gui::height,
 		0,
 		0,
 		windowClass.hInstance,

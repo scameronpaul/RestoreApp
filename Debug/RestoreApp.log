@@ -1,2 +1,17 @@
-﻿  gui.cpp
+﻿  Main.cpp
+E:\Coding\C++\Applications\RestoreApp\app\Main.cpp(123,52): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\Coding\C++\Applications\RestoreApp\app\Main.cpp(123,40): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\Coding\C++\Applications\RestoreApp\app\Main.cpp(170,19): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+E:\Coding\C++\Applications\RestoreApp\app\Main.cpp(174,21): warning C4018: '<': signed/unsigned mismatch
+E:\Coding\C++\Applications\RestoreApp\app\Main.cpp(180,10): warning C4018: '<': signed/unsigned mismatch
+E:\Coding\C++\Applications\RestoreApp\app\Main.cpp(236,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\Coding\C++\Applications\RestoreApp\app\Main.cpp(238,93): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\Coding\C++\Applications\RestoreApp\app\Main.cpp(238,76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\Coding\C++\Applications\RestoreApp\app\Main.cpp(238,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\Coding\C++\Applications\RestoreApp\app\Main.cpp(239,60): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\Coding\C++\Applications\RestoreApp\app\Main.cpp(239,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  powershell.cpp
+E:\Coding\C++\Applications\RestoreApp\app\powershell.cpp(15,20): warning C4018: '<': signed/unsigned mismatch
+E:\Coding\C++\Applications\RestoreApp\app\powershell.cpp(97,20): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
   RestoreApp.vcxproj -> E:\Coding\C++\Applications\RestoreApp\Debug\RestoreApp.exe

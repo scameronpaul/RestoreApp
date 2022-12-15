@@ -21,12 +21,14 @@ float rounding = 6.0f;
 int currentTab = 1;
 bool wingetInstalled;
 
-std::map<std::string, bool> softwareCommunication = {
-	{ "discord", false },
+
+// Define install procedures
+map<std::string, bool> softwareCommunication = {
+	{ "Discord", false },
 	{ "Telegram", false },
 	{ "Signal", false },
 	{ "Slack", false },
-	{ "hexchat", false},
+	{ "Hexchat", false},
 	{ "Jami", false },
 	{ "Matrix", false },
 	{ "Skype", false },
@@ -34,8 +36,7 @@ std::map<std::string, bool> softwareCommunication = {
 	{ "Viber", false },
 	{ "Zoom", false },
 };
-
-std::map<std::string, bool> softwareBrowsers = {
+map<std::string, bool> softwareBrowsers = {
 	{ "Brave", false },
 	{ "Chrome", false },
 	{ "Chromium", false },
@@ -46,8 +47,7 @@ std::map<std::string, bool> softwareBrowsers = {
 	{ "Waterfox", false },
 	{ "Edge", false },
 };
-
-std::map<std::string, bool> softwareDevelopment = {
+map<std::string, bool> softwareDevelopment = {
 	{ "Git", false },
 	{ "GitHub Desktop", false },
 	{ "Python3", false },
@@ -62,8 +62,7 @@ std::map<std::string, bool> softwareDevelopment = {
 	{ "Jetbrains Toolbox", false },
 	{ "Rust", false },
 };
-
-std::map<std::string, bool> softwareDocument = {
+map<std::string, bool> softwareDocument = {
 	{ "Notepad++", false },
 	{ "Obsidian", false },
 	{ "ONLYOffice Desktop", false },
@@ -72,8 +71,7 @@ std::map<std::string, bool> softwareDocument = {
 	{ "Joplin (FOXX Notes)", false },
 	{ "WinMerge", false },
 };
-
-std::map<std::string, bool> softwareProTools = {
+map<std::string, bool> softwareProTools = {
 	{ "Advanced IP Scanner", false },
 	{ "Tabby", false },
 	{ "WinSCP", false },
@@ -83,7 +81,16 @@ std::map<std::string, bool> softwareProTools = {
 	{ "mRemoteNG", false },
 };
 
-//std::map<std::string, bool> software = {
+// Define categories and apps
+map<std::string, map<std::string, bool>> software = {
+	{ "Communication", softwareCommunication },
+	{ "Browsers", softwareBrowsers },
+	{ "Development", softwareDevelopment },
+	{ "Document", softwareDocument },
+	{ "ProTools1", softwareProTools },
+};
+
+//map<std::string, bool> software = {
 //	{ "", false },
 //};
 
@@ -123,6 +130,7 @@ int __stdcall wWinMain(
 			ImGuiWindowFlags_NoMove |
 			ImGuiWindowFlags_NoTitleBar 
 		);
+		ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
 		//gui::width = ImGui::GetWindowWidth();
 		//gui::height = ImGui::GetWindowHeight();
@@ -186,23 +194,12 @@ int __stdcall wWinMain(
 			}
 		} break;
 		case 1: {
-			// Define categories and apps
-			std::map<std::string, std::map<std::string, bool>> software = {
-				{ "Communication", softwareCommunication },
-				{ "Browsers", softwareBrowsers },
-				{ "Development", softwareDevelopment },
-				{ "Document", softwareDocument },
-				{ "ProTools1", softwareProTools },
-				{ "ProTools2", softwareProTools },
-				{ "ProTools3", softwareProTools },
-			};
-			
 			// Scaling behaviour
 			float posX = ImGui::GetCursorPosX();
 			float posY = ImGui::GetCursorPosY();
 			float xPadding = 3;
 			float yPadding = 16;
-			float sizeY = 230;
+			float sizeY = 210;
 			float gridXWidth = gui::width - (posX * 2);
 			int columns = software.size();
 			while (gridXWidth / columns > 260) 
@@ -224,10 +221,8 @@ int __stdcall wWinMain(
 				ImGui::SetCursorPos(ImVec2(posX + ((boxWidth + xPadding) * i), posY + yPadding));
 				std::string frameName = "Software#" + category.first;
 				ImGui::BeginChild(frameName.c_str(), ImVec2(boxWidth, sizeY), true); {
-					for (auto& application : category.second)
-					{
-						ImGui::Checkbox(application.first.c_str(), &application.second);
-					}
+					for (auto& app : category.second)
+						ImGui::Checkbox(app.first.c_str(), &app.second);
 				} ImGui::EndChild();
 				ImGui::SameLine(0, 0);
 				i++;
@@ -237,6 +232,21 @@ int __stdcall wWinMain(
 				}
 			}
 			
+			// Action buttons
+			ImGui::SetCursorPos(ImVec2(7, gui::height - 49));
+			ImGui::Separator();
+			draw_list->AddRectFilled(ImVec2(5, gui::height - 45), ImVec2(gui::width - 5, gui::height - 5), ImColor(0.17f, 0.16f, 0.16f, 1.0f), 8.0f);
+			ImGui::SetCursorPos(ImVec2(gui::width - 70, gui::height - 40));
+			
+			if (ImGui::Button("Install", ImVec2(60, 30)))
+			{
+				std::vector<std::string> apps;
+				for (auto& category : software)
+					for (auto& app : category.second)
+						if (app.second)
+							apps.push_back(app.first);
+				InstallApps(apps);
+			}
 		} break;
 		case 2: {
 			ImGui::Text("Games");
@@ -253,7 +263,6 @@ int __stdcall wWinMain(
 		} break;
 		}
 		// Window footer
-
 		// End IMGUI frame
 		//ImGui::PopStyleColor();
 		ImGui::End();

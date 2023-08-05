@@ -5,6 +5,7 @@
 #include <map>
 
 #include "gui.h"
+#include "software.h"
 #include "powershell.h"
 #include "../imgui/imgui.h"
 #include "../imgui/imgui_impl_dx9.h"
@@ -13,86 +14,14 @@
 
 using namespace ps;
 using namespace std;
+using namespace sft;
 
 ImVec4 windowColor = ImVec4(0.25f, 0.25f, 0.25f, 1.0f);
 ImVec4 borderColor = ImVec4(0.5f, 0.05f, 0.374f, 1.0f);
-float rounding = 6.0f;
+float rounding = 3.5f;
 
 int currentTab = 1;
 bool wingetInstalled;
-
-
-// Define install procedures
-map<std::string, bool> softwareCommunication = {
-	{ "Discord", false },
-	{ "Telegram", false },
-	{ "Signal", false },
-	{ "Slack", false },
-	{ "Hexchat", false},
-	{ "Jami", false },
-	{ "Matrix", false },
-	{ "Skype", false },
-	{ "Teams", false },
-	{ "Viber", false },
-	{ "Zoom", false },
-};
-map<std::string, bool> softwareBrowsers = {
-	{ "Brave", false },
-	{ "Chrome", false },
-	{ "Chromium", false },
-	{ "Firefox", false },
-	{ "LibreWolf", false },
-	{ "Tor Browser", false },
-	{ "Vivaldi", false },
-	{ "Waterfox", false },
-	{ "Edge", false },
-};
-map<std::string, bool> softwareDevelopment = {
-	{ "Git", false },
-	{ "GitHub Desktop", false },
-	{ "Python3", false },
-	{ "VS Code", false },
-	{ "VS Codium", false },
-	{ "Visual Studio 2022", false },
-	{ "NodeJS", false },
-	{ "NodeJS LTS", false },
-	{ "OpenJDK Java 8", false },
-	{ "OpenJDK Java 16", false },
-	{ "Oracle Java 18", false },
-	{ "Jetbrains Toolbox", false },
-	{ "Rust", false },
-};
-map<std::string, bool> softwareDocument = {
-	{ "Notepad++", false },
-	{ "Obsidian", false },
-	{ "ONLYOffice Desktop", false },
-	{ "Adobe Reader DC", false },
-	{ "Foxit PDF", false },
-	{ "Joplin (FOXX Notes)", false },
-	{ "WinMerge", false },
-};
-map<std::string, bool> softwareProTools = {
-	{ "Advanced IP Scanner", false },
-	{ "Tabby", false },
-	{ "WinSCP", false },
-	{ "Putty", false },
-	{ "WireShark", false },
-	{ "Rust Remote Desktop", false },
-	{ "mRemoteNG", false },
-};
-
-// Define categories and apps
-map<std::string, map<std::string, bool>> software = {
-	{ "Communication", softwareCommunication },
-	{ "Browsers", softwareBrowsers },
-	{ "Development", softwareDevelopment },
-	{ "Document", softwareDocument },
-	{ "ProTools1", softwareProTools },
-};
-
-//map<std::string, bool> software = {
-//	{ "", false },
-//};
 
 int __stdcall wWinMain(
 	HINSTANCE instance,
@@ -100,15 +29,15 @@ int __stdcall wWinMain(
 	PWSTR arguments,
 	int commandShow)
 {
-	//FILE* fDummy;
-	//AllocConsole();
-	//freopen_s(&fDummy, "CONOUT$", "w", stdout);
+	FILE* fDummy;
+	AllocConsole();
+	freopen_s(&fDummy, "CONOUT$", "w", stdout);
 	
 	// Dependencies
 	wingetInstalled = CheckForWinget();
 	
 	// Initialize the window class.
-	gui::CreateHWindow("RestoreApp", "RestoreApp # 2 idfk stfu");
+	gui::CreateHWindow("RestoreApp", "Restore Application");
 	gui::CreateDevice();
 	gui::CreateImGui();
 
@@ -131,12 +60,13 @@ int __stdcall wWinMain(
 			ImGuiWindowFlags_NoTitleBar 
 		);
 		ImDrawList* draw_list = ImGui::GetWindowDrawList();
+		ImGuiStyle* style = &ImGui::GetStyle();
 
 		//gui::width = ImGui::GetWindowWidth();
 		//gui::height = ImGui::GetWindowHeight();
 		
 		// Colors
-		ImVec4* colors = ImGui::GetStyle().Colors;
+		ImVec4* colors = style->Colors;
 		colors[ImGuiCol_WindowBg] = windowColor;
 		colors[ImGuiCol_Border] = borderColor;
 		
@@ -152,8 +82,8 @@ int __stdcall wWinMain(
 		ImVec4 defaultText = colors[ImGuiCol_Text];
 
 		// Stylizing
-		ImGui::GetStyle().FrameRounding = rounding;
-		ImGui::GetStyle().TabRounding = rounding;
+		style->FrameRounding = rounding;
+		style->TabRounding = rounding;
 		
 		// IMGUI frame elements
 		// Window title bar
@@ -165,8 +95,8 @@ int __stdcall wWinMain(
 		ImGui::Separator();
 
 		// Window tabs
-		std::vector <std::string> tabs = { "Debloating", "Software", "Games", "Settings", "About" };
-		ImGui::GetStyle().FrameRounding = 2.0f;
+		std::vector <std::string> tabs = { "Tweaks", "Software", "Games", "Settings", "About" };
+		style->FrameRounding = 2.0f;
 		float spanWidth = gui::width - 10;
 		float padding = gui::width - spanWidth;
 		ImGui::SetCursorPosX(padding / 2);
@@ -179,19 +109,32 @@ int __stdcall wWinMain(
 			colors[ImGuiCol_Button] = ImVec4(0.8f, 0.27f, 0.47f, 1.0f);
 			if (i < tabs.size()-1) ImGui::SameLine(0, 3);
 		}
-		ImGui::GetStyle().FrameRounding = rounding;
+		style->FrameRounding = rounding;
 		
 		// Window body
 		switch (currentTab)
 		{
 		case 0: {
-			gui::resize = true;
 			if (ImGui::Button("Debloat All", ImVec2(ImGui::GetContentRegionAvail().x, 40)))
 			{
-				CheckForWinget();
-				//std::thread psThread ( Execute, WINGET );
-				//psThread.detach();
+				Debloater({ DEBLOAT_ALL, DISABLE_EDGE_PDF, DISABLE_ONEDRIVE });
 			}
+			if (ImGui::Button("Debloat Custom", ImVec2(ImGui::GetContentRegionAvail().x, 40)))
+			{
+				std::vector<std::vector<std::string>> commands = { DEBLOAT_CUSTOM };
+				for (auto& item : debloatOptions)
+				{
+					if (std::get<2>(item) == true)
+						commands.push_back(std::get<1>(item));
+				}
+				Debloater(commands);
+			}
+			ImGui::BeginChild("##DebloatOptions", ImVec2(ImGui::GetContentRegionAvail().x / 2, 150), true);
+			for (auto& item : debloatOptions)
+			{
+				ImGui::Checkbox(std::get<0>(item).c_str(), &std::get<2>(item));
+			}
+			ImGui::EndChild();
 		} break;
 		case 1: {
 			// Scaling behaviour
@@ -233,20 +176,30 @@ int __stdcall wWinMain(
 			}
 			
 			// Action buttons
+			int buttonWidth = 60;
+			int buttonPadding = 3;
+			int buttonOffset = 10;
+			int buttonY = gui::height - 40;
 			ImGui::SetCursorPos(ImVec2(7, gui::height - 49));
 			ImGui::Separator();
-			draw_list->AddRectFilled(ImVec2(5, gui::height - 45), ImVec2(gui::width - 5, gui::height - 5), ImColor(0.17f, 0.16f, 0.16f, 1.0f), 8.0f);
-			ImGui::SetCursorPos(ImVec2(gui::width - 70, gui::height - 40));
+			draw_list->AddRectFilled(ImVec2(5, gui::height - 45), ImVec2(gui::width - 5, gui::height - 5), ImColor(0.17f, 0.16f, 0.16f, 1.0f), 7.0f);
 			
-			if (ImGui::Button("Install", ImVec2(60, 30)))
+			ImGui::SetCursorPos(ImVec2(gui::width - (buttonOffset + buttonWidth), buttonY));
+			if (ImGui::Button("Install", ImVec2(buttonWidth, 30)))
 			{
+				// Get all checked boxes and install
 				std::vector<std::string> apps;
 				for (auto& category : software)
 					for (auto& app : category.second)
 						if (app.second)
 							apps.push_back(app.first);
+				UncheckAll();
 				InstallApps(apps);
 			}
+			
+			//ImGui::SetCursorPos(ImVec2(gui::width - ((buttonOffset + buttonWidth) * 2), buttonY));
+			//ImGui::Button("Install", ImVec2(buttonWidth, 30));
+			
 		} break;
 		case 2: {
 			ImGui::Text("Games");

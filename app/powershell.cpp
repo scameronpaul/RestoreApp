@@ -22,18 +22,14 @@ bool ps::SaveScript(std::vector<std::string> commands, std::string filename, std
 	return true;
 }
 
-void ps::Powershell(std::vector<std::string> file, std::string filename, std::string completeMessage)
+void ps::ExecuteScript(std::string command, std::string finishedMessage)
 {
-	if (!SaveScript(file, filename, ".ps1", "")) return;
-
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
 
 	ZeroMemory(&si, sizeof(si));
 	si.cb = sizeof(si);
 	ZeroMemory(&pi, sizeof(pi));
-
-	std::string command = "powershell.exe -ExecutionPolicy Bypass -File " + filename + ".ps1";
 	
 	// Create a new powershell process
 	if (CreateProcess(NULL, (LPSTR)command.c_str(),
@@ -42,15 +38,25 @@ void ps::Powershell(std::vector<std::string> file, std::string filename, std::st
 		// Wait until child process exits.
 		WaitForSingleObject(pi.hProcess, INFINITE);
 
-		MessageBox(NULL, completeMessage.c_str(), "RestoreApp", MB_OK);
+		MessageBox(NULL, finishedMessage.c_str(), "RestoreApp", MB_OK);
 
 		// Close process and thread handles.
 		CloseHandle(pi.hProcess);
 		CloseHandle(pi.hThread);
-	} else {
+	}
+	else {
 		CloseHandle(pi.hProcess);
 		CloseHandle(pi.hThread);
 	}
+}
+
+void ps::Powershell(std::vector<std::string> file, std::string filename, std::string completeMessage)
+{
+	if (!SaveScript(file, filename, ".ps1", "")) return;
+
+	std::string command = "powershell.exe -ExecutionPolicy Bypass -File " + filename + ".ps1";
+	
+	ExecuteScript(command, completeMessage);
 	
 	remove((filename + ".ps1").c_str());
 }
@@ -67,7 +73,7 @@ bool ps::CheckForWinget()
 	bool installed = false;
 
 	// Create a new powershell process
-	if (CreateProcess(NULL, (LPSTR)"winget --info",
+	if (CreateProcess("Winget Installation", (LPSTR)"winget --info",
 		NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
 	{
 		// Wait until child process exits.
@@ -93,12 +99,24 @@ bool ps::CheckForWinget()
 
 void ps::InstallApps(std::vector<std::string> apps)
 {
-	std::vector<std::string> commands;
-	for (int i = 0; i < apps.size(); i++)
-	{
-		commands.push_back("winget install " + ps::appFiles[apps[i]]);
+	std::string commands;
+	for (const auto& app : apps) {
+		commands += "winget install " + ps::appFiles[app] + "\n";
 	}
 
-	std::thread install (Powershell, commands, "software", "Finished installing apps.");
+	std::thread install (ExecuteScript, commands, "Finished installing apps.");
 	install.detach();
+}
+
+void ps::Debloater(std::vector<std::vector<std::string>> commands)
+{
+	std::vector<std::string> execute = ps::DEBLOAT;
+	for (const auto& cmd : commands) {
+		execute.insert(execute.end(), cmd.begin(), cmd.end());
+	}
+
+	SaveScript(execute, "debloat", ".ps1", "");
+
+	//std::thread debloat(Powershell, commands, "debloat", "Finished debloating.");
+	//debloat.detach();
 }

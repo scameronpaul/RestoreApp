@@ -1,2 +1,0 @@
-winget install SFLinux.Jami
-

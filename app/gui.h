@@ -8,7 +8,6 @@ namespace gui
 	inline int height = 570;
 	
 	inline bool exit = true;
-	inline bool resize = false;
 	
 	// winapi window vars
 	inline HWND window = nullptr;

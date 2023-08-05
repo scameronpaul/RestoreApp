@@ -45,6 +45,9 @@
     <ClInclude Include="app\powershell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="app\software.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui.cpp">
@@ -75,6 +78,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="app\powershell.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="app\software.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
